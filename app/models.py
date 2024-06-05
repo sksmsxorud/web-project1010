@@ -12,6 +12,8 @@ class Diary(db.Model):
     subject = db.Column(db.String(200), nullable=False) #제목#
     content = db.Column(db.Text(), nullable=False) #내용#
     create_date = db.Column(db.DateTime(), nullable=False) #날짜#
+    # 'weather' 필드 추가
+    weather = db.Column(db.String(255))
 
 class Answer(db.Model): #댓글#
     id = db.Column(db.Integer, primary_key=True)

@@ -18,7 +18,16 @@ def create_app():
     
 
     # 블루프린트
-    from .views import main_views
+    from .views import main_views, diary_views, answer_views, auth_views
+
+
     app.register_blueprint(main_views.bp)
+    app.register_blueprint(diary_views.bp)
+    app.register_blueprint(answer_views.bp)
+    app.register_blueprint(auth_views.bp)
+
+    # 필터
+    from .filter import format_datetime
+    app.jinja_env.filters['datetime'] = format_datetime
 
     return app

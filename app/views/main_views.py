@@ -1,10 +1,14 @@
-from flask import Blueprint, render_template
-from pybo.models import Question
+from flask import Blueprint, url_for
+from werkzeug.utils import redirect
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
 
+@bp.route('/hello')
+def hello_pybo():
+    return 'Hello, world!'
+
+
 @bp.route('/')
 def index():
-    diary_list = Diary.query.order_by(Diary.create_date.desc())
-    return render_template('diary/diary_list.html', diary_list=diary_list)
+    return redirect(url_for('diary._list'))
