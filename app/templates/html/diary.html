@@ -7,16 +7,418 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>일기 작성</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            width: calc(100% - 40px); /* 너비 조정 */
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 70px;
+            margin-left: 20px; /* 왼쪽 여백 추가 */
+            margin-bottom: 20px; /* 아래쪽 여백 추가 */
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 24px;
+            height: 24px;
+            margin: 0 4px;
+        }
+
+        .sidebar {
+            width: 180px;
+            height: calc(100vh - 150px);
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 10px 0 10px 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar li {
+            padding: 8px 0;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+
+        .sidebar li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar li img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .main-content {
+            flex: 2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .date-weather {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .date-weather input {
+            margin-right: 10px;
+            width: 200px;
+        }
+
+        .date-weather select {
+            width: 200px;
+        }
+
+        .weather-icons img {
+            width: 40px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: transform 0.3s;
+        }
+
+        .weather-icons img:hover {
+            transform: scale(1.2);
+        }
+
+        .emotion-selector {
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            cursor: pointer;
+        }
+
+        .selected-emotion {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selected-emotion::after {
+            content: '▼';
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .emotion-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            display: none;
+            z-index: 1000;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .emotion-options li {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .emotion-options li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .emotion-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        #title {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: calc(100% - 32px);
+            border-radius: 10px; /* 둥근 사각형 */
+            border: 1px solid #ddd; /* 경계 추가 */
+        }
+
+        #content {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: calc(100% - 32px);
+            height: auto;
+            min-height: 200px;
+            overflow-y: hidden;
+            resize: none;
+            border-radius: 10px; /* 둥근 사각형 */
+            border: 1px solid #ddd; /* 경계 추가 */
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .controls label {
+            margin-right: 10px;
+        }
+
+        #imageUpload {
+            margin-right: auto;
+        }
+
+        #saveButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #saveButton:hover {
+            background-color: #e0e0e0;
+        }
+
+        .comment-section {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: 300px;
+            border-radius: 10px;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comment .author {
+            font-weight: bold;
+        }
+
+        .comment .text {
+            margin: 5px 0;
+        }
+
+        .comment .timestamp {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .comment .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .comment .actions button {
+            background-color: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0;
+        }
+
+        .comment .actions button:hover {
+            color: #000;
+        }
+
+        .comment-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        .comment-input button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .comment-input button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .chatbot {
+            width: 250px;
+            height: calc(100vh - 150px);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 10px 10px 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .chatbot h3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chatbot h3 img {
+            margin-right: 8px;
+            width: 24px;
+            height: 24px;
+        }
+
+        #chat {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto;
+            border-radius: 10px;
+            width: calc(100% - 20px);
+            height: 300px;
+            background-color: #f5f5f5;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        #chatInput {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            width: calc(100% - 20px);
+        }
+
+        #sendButton {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #sendButton:hover {
+            background-color: #e0e0e0;
+        }
+
+        .user-message,
+        .bot-message {
+            background-color: #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 70%;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+        .bot-message img {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+    </style>
+
 </head>
 
 <body>
-    <div class="header">
-        <div class="logo">
-            <img src="https://img.icons8.com/emoji/48/four-leaf-clover.png" alt="clover">
-            Nicky Vicky
-            <img src="https://img.icons8.com/emoji/48/four-leaf-clover.png" alt="clover">
-        </div>
-    </div>
+    
     <div class="container">
         <div class="sidebar">
             <ul>
