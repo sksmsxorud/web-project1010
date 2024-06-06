@@ -1,10 +1,20 @@
-from flask import Blueprint, render_template, request, jsonify
+""" from flask import Blueprint, render_template, request, jsonify
 from app.views.auth_views import login_required
 from app.models import Friendship, User
 from werkzeug.utils import redirect
 from .. import db
+from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
 
 friends_bp = Blueprint('friends', __name__, url_prefix='/friends')
+
+@staticmethod
+def get(user_id):
+    user_data = get_user_from_db(user_id)  # 데이터베이스 접근 함수
+    if user_data:
+        return User(user_data.id, user_data.username)
+    return None
+
+
 
 @friends_bp.route('/add_friend', methods=['POST'])
 def add_friend():
@@ -43,4 +53,4 @@ def get_friends(user_id):
     friends = User.query.filter(User.id.in_(friend_ids)).all()
 
     # 여기서 HTML 파일을 렌더링하고 친구 목록을 전달합니다.
-    return render_template('friend_list.html', friends=friends)
+    return render_template('/html/friends_list.html', friends=friends)  """

@@ -1,12 +1,16 @@
-from flask import Blueprint, url_for, render_template, flash, request, session, g
+from flask import Blueprint, url_for, render_template, flash, request, session, g, Flask
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import redirect
+from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
 import functools
 from app import db
 from app.forms import UserCreateForm, UserLoginForm
 from app.models import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+app = Flask(__name__)
+
+
 
 
 @bp.route('/signup/', methods=('GET', 'POST'))
@@ -59,11 +63,3 @@ def logout():
     session.clear()
     return redirect(url_for('main.index'))
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(*args, **kwargs):
-        if g.user is None:
-            _next = request.url if request.method == 'GET' else ''
-            return redirect(url_for('auth.login', next=_next))
-        return view(*args, **kwargs)
-    return wrapped_view

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
 
 import config
 
@@ -15,11 +16,13 @@ def create_app():
     # ORM
     db.init_app(app)
     migrate.init_app(app, db)
+
+
     
 
     # 블루프린트
-    from .views import main_views, diary_views, answer_views, auth_views, profile_views, friends_views
-    from .views.friends_views import friends_bp  # 여기서 friends_bp를 임포트합니다.
+    from .views import main_views, diary_views, answer_views, auth_views, profile_views
+    
 
 
 
@@ -28,8 +31,7 @@ def create_app():
     app.register_blueprint(answer_views.bp)
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(profile_views.bp)
-    app.register_blueprint(friends_views.friends_bp)
-
+   
     # 필터
     from .filter import format_datetime
     app.jinja_env.filters['datetime'] = format_datetime

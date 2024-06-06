@@ -1,6 +1,7 @@
 from flask import Blueprint, url_for
 from werkzeug.utils import redirect
 from flask import Blueprint, render_template, request, url_for
+from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
 
 bp = Blueprint('main', __name__, url_prefix='/')
 

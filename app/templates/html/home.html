@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -275,13 +277,13 @@
 </head>
 
 <body>
-    <div class="header">
+    <!--<div class="header">
         <div class="logo">
             <img src="https://img.icons8.com/emoji/48/four-leaf-clover.png" alt="clover">
             Nicky Vicky
             <img src="https://img.icons8.com/emoji/48/four-leaf-clover.png" alt="clover">
         </div>
-    </div>
+    </div> -->
     <div class="container">
         <div class="sidebar">
             <ul>
@@ -289,9 +291,10 @@
                     <img src="https://img.icons8.com/material-sharp/24/home.png" alt="home" />
                     홈
                 </li>
-                <li>
-                    <a href = "friend_list.html"><img src="https://img.icons8.com/ios-filled/24/friends.png"  alt="friends" />
-                    친구목록
+                 <li>
+                    <a href="{{ url_for('diary._list')}}">
+                        <img src="https://img.icons8.com/ios-filled/24/friends.png" alt="friends" />
+                        일기 게시판
                     </a>
                 </li>
                 <li>
@@ -531,3 +534,4 @@
 </body>
 
 </html>
+{% endblock %}
