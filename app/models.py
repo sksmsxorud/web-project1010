@@ -1,6 +1,6 @@
 from . import db
 from app import db
-
+from datetime import datetime
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -14,6 +14,8 @@ class Diary(db.Model):
     create_date = db.Column(db.DateTime(), nullable=False) #날짜#
     # 'weather' 필드 추가
     weather = db.Column(db.String(255))
+    date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+    image_filename = db.Column(db.String(100), nullable=True)
 
 class Answer(db.Model): #댓글#
     id = db.Column(db.Integer, primary_key=True)
