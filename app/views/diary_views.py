@@ -32,4 +32,4 @@ def create():
         db.session.add(diary)
         db.session.commit()
         return redirect(url_for('main.index'))
-    return render_template('html/diary.html', form=form)
+    return render_template('/html/diary.html', form=form)
