@@ -1,5 +1,6 @@
 from flask import Blueprint, url_for
 from werkzeug.utils import redirect
+from flask import Blueprint, render_template, request, url_for
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
@@ -11,4 +12,9 @@ def hello_pybo():
 
 @bp.route('/')
 def index():
-    return redirect(url_for('diary._list'))
+    # 'home' 뷰 함수로 리다이렉트하도록 변경
+    return redirect(url_for('main.home'))  # 'main'은 블루프린트 이름, 'home'은 뷰 함수 이름
+
+@bp.route('/home')
+def home():
+    return render_template('html/home.html')

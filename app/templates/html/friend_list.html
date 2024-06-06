@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>친구 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* 배경색 흰색으로 변경 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            overflow-x: hidden; /* 가로 스크롤 제거 */
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            width: 100%; /* 컨테이너 너비 조정 */
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box; /* 패딩과 보더가 박스의 총 크기에 포함되도록 설정 */
+            margin-top: 70px; /* 네모들을 아래로 내리기 위해 추가 */
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 24px;
+            height: 24px;
+            margin: 0 4px;
+        }
+
+        .sidebar {
+            width: 180px; /* 줄어든 너비 */
+            height: calc(100vh - 150px); /* 화면 사이즈에 맞게 높이 조정 */
+            background-color: #fff;
+            padding: 10px; /* 줄어든 패딩 */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 10px 0 10px 10px; /* 상단 여백 추가 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box; /* 패딩과 보더가 박스의 총 크기에 포함되도록 설정 */
+            overflow: hidden; /* 내용이 넘칠 경우 스크롤 */
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar li {
+            padding: 8px 0; /* 줄어든 패딩 */
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 10px;
+            margin: 5px 0;
+        }
+
+        .sidebar li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar li img {
+            width: 20px; /* 줄어든 아이콘 크기 */
+            height: 20px; /* 줄어든 아이콘 크기 */
+            margin-right: 8px;
+        }
+
+        .main-content {
+            flex: 2; /* 가로폭 조정 */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-sizing: border-box; /* 패딩과 보더가 박스의 총 크기에 포함되도록 설정 */
+        }
+
+        .friend-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .friend-list-header h2 {
+            margin: 0;
+        }
+
+        .friend-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .friend-list li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            justify-content: space-between;
+        }
+
+        .friend-list li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .friend-list img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .friend-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .friend-info .name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .friend-info .status {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .delete-button {
+            background-color: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .chatbot {
+            width: 250px; /* 챗봇 너비 확장 */
+            height: calc(100vh - 150px); /* 화면 사이즈에 맞게 높이 조정 */
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 10px 10px 10px 0; /* 상단 여백 추가 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box; /* 패딩과 보더가 박스의 총 크기에 포함되도록 설정 */
+            overflow: hidden; /* 내용이 넘칠 경우 스크롤 */
+        }
+
+        .chatbot h3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chatbot h3 img {
+            margin-right: 8px;
+            width: 24px;
+            height: 24px;
+        }
+
+        #chat {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto; /* 스크롤 추가 */
+            border-radius: 10px;
+            width: calc(100% - 20px);
+            height: 300px; /* 높이를 고정하여 스크롤 가능하도록 함 */
+            background-color: #f5f5f5; /* 배경색 추가 */
+            font-size: 14px; /* 글씨 크기 조정 */
+        }
+
+        #chatInput {
+            padding: 10px;
+            font-size: 14px; /* 글씨 크기 조정 */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            width: calc(100% - 20px);
+        }
+
+        #sendButton {
+            padding: 8px 16px; /* 버튼 크기 조정 */
+            font-size: 14px; /* 글씨 크기 조정 */
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #sendButton:hover {
+            background-color: #e0e0e0;
+        }
+
+        .user-message, .bot-message {
+            background-color: #e0e0e0;
+            padding: 8px 12px; /* 패딩 조정 */
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 70%;
+            color: #000;
+            font-size: 14px; /* 글씨 크기 조정 */
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #dcf8c6; /* 카카오톡 유저 메시지 색상 */
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #fff; /* 카카오톡 봇 메시지 색상 */
+            border: 1px solid #ddd; /* 카카오톡 스타일을 위한 보더 추가 */
+        }
+
+        .bot-message img {
+            width: 16px; /* 이모티콘 크기 조정 */
+            height: 16px; /* 이모티콘 크기 조정 */
+            vertical-align: middle; /* 텍스트와 이모티콘 정렬 */
+            margin-right: 4px; /* 텍스트와 이모티콘 간격 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="https://img.icons8.com/emoji/48/four-leaf-clover.png" alt="clover">
+            Nicky Vicky
+            <img src="https://img.icons8.com/emoji/48/four-leaf-clover.png" alt="clover">
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <img src="https://img.icons8.com/material-sharp/24/home.png" alt="home" />
+                    홈
+                </li>
+                <li>
+                    <img src="https://img.icons8.com/ios-filled/24/friends.png" alt="friends" />
+                    친구목록
+                </li>
+                <li>
+                    <img src="https://img.icons8.com/material-rounded/24/alarm.png" alt="notifications icon">
+                    알림
+                </li>
+                <li>
+                    <img src="https://img.icons8.com/windows/24/admin-settings-male.png" alt="profile icon">
+                    프로필
+                </li>
+                <li>
+                    <img src="https://img.icons8.com/material-sharp/24/settings.png" alt="settings icon">
+                    설정
+                </li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="friend-list-header">
+                <h2>친구 목록 (<span id="friendCount">{{ friends|length }}</span>명)</h2>
+        </div>
+        <ul class="friend-list" id="friendList">
+            {% for friend in friends %}
+        <li>
+            <img src="https://img.icons8.com/ios/50/000000/user-male.png" alt="friend">
+            <div class="friend-info">
+                <span class="name">{{ friend.username }}</span>
+                <span class="status">상태 메시지가 여기에 들어갑니다.</span>
+            </div>
+            <button class="delete-button" onclick="deleteFriend(this)">삭제</button>
+        </li>
+    {% endfor %}
+    <!-- 여기에 더 많은 친구 목록 항목을 추가할 수 있습니다. -->
+</ul>
+        </div>
+        <div class="chatbot">
+            <h3>
+                <img src="https://img.icons8.com/ios/24/bot.png" alt="chatbot icon">
+                AI 챗봇
+            </h3>
+            <div id="chat"></div>
+            <input type="text" id="chatInput" placeholder="무엇이든 물어보세요" />
+            <button id="sendButton">전송</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFriendCount();
+        });
+
+        function updateFriendCount() {
+            const friendList = document.getElementById('friendList');
+            const friendCount = friendList.getElementsByTagName('li').length;
+            document.getElementById('friendCount').textContent = friendCount;
+        }
+
+        function deleteFriend(button) {
+            if (confirm('정말로 이 친구를 삭제하시겠습니까?')) {
+                const friendItem = button.parentElement;
+                friendItem.remove();
+                updateFriendCount();
+            }
+        }
+
+        const weatherIcons = document.querySelectorAll('.weather-icons img');
+        let selectedWeather = '';
+
+        weatherIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                selectedWeather = icon.alt;
+                weatherIcons.forEach(i => i.style.border = 'none');
+                icon.style.border = '2px solid #000';
+            });
+        });
+
+        document.getElementById('sendButton').addEventListener('click', sendChatMessage);
+
+        document.getElementById('chatInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput').value;
+            if (!chatInput) {
+                return;
+            }
+
+            const chatContainer = document.getElementById('chat');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = chatInput;
+            userMessage.className = 'user-message';
+            chatContainer.appendChild(userMessage);
+
+            // Simulate AI response
+            const botMessage = document.createElement('div');
+            botMessage.innerHTML = '<img src="https://img.icons8.com/ios/24/bot.png" alt="chatbot icon">' + chatInput;
+            botMessage.className = 'bot-message';
+            chatContainer.appendChild(botMessage);
+
+            document.getElementById('chatInput').value = '';
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
