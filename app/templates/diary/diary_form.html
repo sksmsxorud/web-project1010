@@ -19,6 +19,61 @@
     </div>
     {% endif %}
     <!-- 오류표시 End -->
+    <div class="date-weather">
+        <input type="date" id="date" />
+        <div class="weather-icons">
+            <img src="https://img.icons8.com/ios/50/000000/sun--v1.png" alt="sunny" id="sunny">
+            <img src="https://img.icons8.com/ios/50/000000/cloud.png" alt="cloudy" id="cloudy">
+            <img src="https://img.icons8.com/ios/50/000000/rain.png" alt="rainy" id="rainy">
+            <img src="https://img.icons8.com/ios/50/000000/snow.png" alt="snowy" id="snowy">
+            <img src="https://img.icons8.com/ios/50/000000/storm.png" alt="stormy" id="stormy">
+        </div>
+
+        <div class="emotion-selector" id="emotion-selector">
+            <div class="selected-emotion" id="selected-emotion">Select emotion</div>
+            <ul class="emotion-options" id="emotion-options">
+                <li data-emotion="happy">
+                    <img src="https://img.icons8.com/fluency/48/happy.png" alt="happy" class="emotion-icon"> Happy
+                </li>
+                <li data-emotion="sad">
+                    <img src="https://img.icons8.com/fluency/48/crying.png" alt="sad" class="emotion-icon"> Sad
+                </li>
+                <li data-emotion="angry">
+                    <img src="https://img.icons8.com/fluency/48/angry.png" alt="angry" class="emotion-icon"> Angry
+                </li>
+                <li data-emotion="worried">
+                    <img src="https://img.icons8.com/emoji/48/worried-face.png" alt="worried" class="emotion-icon"> Worried
+                </li>
+                <li data-emotion="tired">
+                    <img src="https://img.icons8.com/emoji/48/tired-face.png" alt="tired" class="emotion-icon"> Tired
+                </li>
+                <li data-emotion="hugging">
+                    <img src="https://img.icons8.com/emoji/48/hugging-face.png" alt="hugging" class="emotion-icon"> Hugging
+                </li>
+                <li data-emotion="zany">
+                    <img src="https://img.icons8.com/emoji/48/zany-face.png" alt="zany" class="emotion-icon"> Zany
+                </li>
+                <li data-emotion="melting">
+                    <img src="https://img.icons8.com/emoji/48/melting-face-emoji.png" alt="melting" class="emotion-icon"> Melting
+                </li>
+                <li data-emotion="thinking">
+                    <img src="https://img.icons8.com/emoji/48/thinking-face.png" alt="thinking" class="emotion-icon"> Thinking
+                </li>
+                <li data-emotion="woozy">
+                    <img src="https://img.icons8.com/3d-fluency/48/woozy-face-1.png" alt="woozy" class="emotion-icon"> Woozy
+                </li>
+                <li data-emotion="fear">
+                    <img src="https://img.icons8.com/3d-fluency/48/face-screaming-in-fear-1.png" alt="fear" class="emotion-icon"> Fear
+                </li>
+                <li data-emotion="nauseated">
+                    <img src="https://img.icons8.com/emoji/48/nauseated-face.png" alt="nauseated" class="emotion-icon"> Nauseated
+                </li>
+                <li data-emotion="money">
+                    <img src="https://img.icons8.com/emoji/48/money-mouth-face.png" alt="money" class="emotion-icon"> Money
+                </li>
+            </ul>
+        </div>
+    </div>
 
         <div class="mb-3">
             <label for="subject">제목</label>
@@ -26,18 +81,67 @@
         </div>
 
         <div class="mb-3">
-            <label for="subject">날씨</label>
-            <input type="text" class="form-control" name="weather" id="weather">
-        </div>
-
-        <div class="mb-3">
             <label for="content">내용</label>
             <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.data or '' }}</textarea>
         </div>
         
+        <div class="controls">
+            <label for="imageUpload">사진 업로드</label>
+            <input type="file" id="imageUpload" accept="image/*" />
+            <button id="saveButton">저장</button>
+        </div>
+
         <button type="submit" class="btn btn-primary">저장하기</button>
 
 
     </form>
 </div>
+
+<script>
+    const weatherIcons = document.querySelectorAll('.weather-icons img');
+        let selectedWeather = '';
+        let selectedEmotion = '';
+
+        weatherIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                selectedWeather = icon.alt;
+                weatherIcons.forEach(i => i.style.border = 'none');
+                icon.style.border = '2px solid #000';
+            });
+        });
+
+        const emotionSelector = document.getElementById('emotion-selector');
+        const selectedEmotionElement = document.getElementById('selected-emotion');
+        const emotionOptions = document.getElementById('emotion-options');
+        const emotionIcons = document.querySelectorAll('.emotion-options li');
+
+        selectedEmotionElement.addEventListener('click', () => {
+            emotionOptions.style.display = emotionOptions.style.display === 'none' || emotionOptions.style.display === '' ? 'block' : 'none';
+        });
+
+        emotionIcons.forEach(icon => {
+            icon.addEventListener('click', event => {
+                selectedEmotion = event.currentTarget.dataset.emotion;
+                const iconImage = event.currentTarget.querySelector('img').src;
+                selectedEmotionElement.innerHTML = `<img src="${iconImage}" alt="${selectedEmotion}" class="emotion-icon"> ${selectedEmotion.charAt(0).toUpperCase() + selectedEmotion.slice(1)}`;
+                emotionOptions.style.display = 'none';
+            });
+        });
+
+        document.addEventListener('click', event => {
+            if (!emotionSelector.contains(event.target)) {
+                emotionOptions.style.display = 'none';
+            }
+        });
+
+        
+
+        document.getElementById('chatInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        document.getElementById('sendButton').addEventListener('click', sendChatMessage);
+</script>
 {% endblock %}
