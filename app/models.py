@@ -14,9 +14,7 @@ class Diary(db.Model):
     create_date = db.Column(db.DateTime(), nullable=False) #날짜#
     # 'weather' 필드 추가
     weather = db.Column(db.String(255))
-    date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-    image_filename = db.Column(db.String(100), nullable=True)
-
+    
 class Answer(db.Model): #댓글#
     id = db.Column(db.Integer, primary_key=True)
     diary_id = db.Column(db.Integer, db.ForeignKey('diary.id', ondelete='CASCADE')) #일기를 삭제하면 댓글도 삭제되게 연동#

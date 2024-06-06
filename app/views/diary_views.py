@@ -14,7 +14,7 @@ bp = Blueprint('diary', __name__, url_prefix='/diary')
 def _list():
     page = request.args.get('page', type=int, default=1)  # 페이지
     diary_list = Diary.query.order_by(Diary.create_date.desc())
-    diary_list = diary_list.paginate(page=page, per_page=10)
+    diary_list = diary_list.paginate(page=page, per_page=20)
     return render_template('diary/diary_list.html', diary_list=diary_list)
 
 
