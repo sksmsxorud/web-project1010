@@ -21,3 +21,4 @@ def create(diary_id):
         db.session.commit()
         return redirect(url_for('diary.detail', diary_id=diary_id))
     return render_template('diary/diary_detail.html', diary=diary, form=form)
+

@@ -307,35 +307,21 @@
         </div>
         <div class="main-content">
             <div class="friend-list-header">
-                <h2>친구 목록 (<span id="friendCount">0</span>명)</h2>
+                <h2>친구 목록 (<span id="friendCount">{{ friends|length }}</span>명)</h2>
+        </div>
+        <ul class="friend-list" id="friendList">
+            {% for friend in friends %}
+        <li>
+            <img src="https://img.icons8.com/ios/50/000000/user-male.png" alt="friend">
+            <div class="friend-info">
+                <span class="name">{{ friend.username }}</span>
+                <span class="status">상태 메시지가 여기에 들어갑니다.</span>
             </div>
-            <ul class="friend-list" id="friendList">
-                <li>
-                    <img src="https://img.icons8.com/ios/50/000000/user-male.png" alt="friend">
-                    <div class="friend-info">
-                        <span class="name">김철수</span>
-                        <span class="status">안녕하세요!</span>
-                    </div>
-                    <button class="delete-button" onclick="deleteFriend(this)">삭제</button>
-                </li>
-                <li>
-                    <img src="https://img.icons8.com/ios/50/000000/user-female.png" alt="friend">
-                    <div class="friend-info">
-                        <span class="name">이영희</span>
-                        <span class="status">좋은 하루 되세요!</span>
-                    </div>
-                    <button class="delete-button" onclick="deleteFriend(this)">삭제</button>
-                </li>
-                <li>
-                    <img src="https://img.icons8.com/ios/50/000000/user-male.png" alt="friend">
-                    <div class="friend-info">
-                        <span class="name">박민수</span>
-                        <span class="status">오랜만이에요!</span>
-                    </div>
-                    <button class="delete-button" onclick="deleteFriend(this)">삭제</button>
-                </li>
-                <!-- 여기에 더 많은 친구 목록 항목을 추가할 수 있습니다. -->
-            </ul>
+            <button class="delete-button" onclick="deleteFriend(this)">삭제</button>
+        </li>
+    {% endfor %}
+    <!-- 여기에 더 많은 친구 목록 항목을 추가할 수 있습니다. -->
+</ul>
         </div>
         <div class="chatbot">
             <h3>

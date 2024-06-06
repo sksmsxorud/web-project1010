@@ -18,13 +18,17 @@ def create_app():
     
 
     # 블루프린트
-    from .views import main_views, diary_views, answer_views, auth_views
+    from .views import main_views, diary_views, answer_views, auth_views, profile_views, friends_views
+    from .views.friends_views import friends_bp  # 여기서 friends_bp를 임포트합니다.
+
 
 
     app.register_blueprint(main_views.bp)
     app.register_blueprint(diary_views.bp)
     app.register_blueprint(answer_views.bp)
     app.register_blueprint(auth_views.bp)
+    app.register_blueprint(profile_views.bp)
+    app.register_blueprint(friends_views.friends_bp)
 
     # 필터
     from .filter import format_datetime
