@@ -1,5 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<div class="container">
+    <div class="sidebar">
+        <ul>
+            <li>
+                <a href="{{ url_for('main.home')}}">
+                    <img src="https://img.icons8.com/material-sharp/24/home.png" alt="home" />
+                홈
+            </a>
+            </li>
+             <li>
+                <a href="{{ url_for('diary._list')}}">
+                    <img src="https://img.icons8.com/ios-filled/24/friends.png" alt="friends" />
+                    일기 게시판
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.notice')}}">
+                <img src="https://img.icons8.com/material-rounded/24/alarm.png" alt="notifications icon">
+                알림
+            </a>
+            </li>
+            <li>
+                <a href="{{ url_for('main.profile')}}">
+                <img src="https://img.icons8.com/windows/24/admin-settings-male.png" alt="profile icon">
+                프로필
+            </a>
+            </li>
+            <li>
+                <img src="https://img.icons8.com/material-sharp/24/settings.png" alt="settings icon">
+                설정
+            </li>
+        </ul>
+    </div>
 <div class="container my-3">
     <!-- 일기 -->
     <h2 class="border-bottom py-2">{{ diary.subject }}</h2>
@@ -16,7 +50,8 @@
             </div>
         </div>
     </div>
-    
+</div>   
+<div class="container my-3">
     <!-- 답변 목록 -->
     <h5 class="border-bottom my-3 py-2">{{ diary.answer_set|length }}개의 댓글이 있습니다.</h5>
     {% for answer in diary.answer_set %}
@@ -31,6 +66,8 @@
         </div>
     </div>
     {% endfor %}
+</div>
+<div class = "container my -3">
     <!-- 답변 등록 -->
     <form action="{{ url_for('answer.create', diary_id=diary.id) }}" method="post" class="my-3">
         {{ form.csrf_token }}
@@ -53,5 +90,7 @@
         </div>
         <input type="submit" value="댓글달기" class="btn btn-primary">
     </form>
+</div>
+</div>
 </div>
 {% endblock %}

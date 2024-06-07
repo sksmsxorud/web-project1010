@@ -29,7 +29,7 @@
             overflow: hidden;
             padding: 20px;
             box-sizing: border-box; /* 패딩과 보더가 박스의 총 크기에 포함되도록 설정 */
-            margin-top: 70px; /* 네모들을 아래로 내리기 위해 추가 */
+            margin-top: 20px; /* 네모들을 아래로 내리기 위해 추가 */
         }
 
         .header {
@@ -288,8 +288,10 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <img src="https://img.icons8.com/material-sharp/24/home.png" alt="home" />
+                    <a href="{{ url_for('main.home')}}">
+                        <img src="https://img.icons8.com/material-sharp/24/home.png" alt="home" />
                     홈
+                </a>
                 </li>
                  <li>
                     <a href="{{ url_for('diary._list')}}">
@@ -298,12 +300,16 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ url_for('main.notice')}}">
                     <img src="https://img.icons8.com/material-rounded/24/alarm.png" alt="notifications icon">
                     알림
+                </a>
                 </li>
                 <li>
+                    <a href="{{ url_for('main.profile')}}">
                     <img src="https://img.icons8.com/windows/24/admin-settings-male.png" alt="profile icon">
                     프로필
+                </a>
                 </li>
                 <li>
                     <img src="https://img.icons8.com/material-sharp/24/settings.png" alt="settings icon">

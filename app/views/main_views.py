@@ -19,3 +19,11 @@ def index():
 @bp.route('/home')
 def home():
     return render_template('html/home.html')
+
+@bp.route('notifications')
+def notice():
+    return render_template('html/notifications.html')
+
+@bp.route('profile')
+def profile():
+    return render_template('html/profile.html')
