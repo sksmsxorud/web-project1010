@@ -311,10 +311,7 @@
                     프로필
                 </a>
                 </li>
-                <li>
-                    <img src="https://img.icons8.com/material-sharp/24/settings.png" alt="settings icon">
-                    설정
-                </li>
+                
             </ul>
             <select id="yearSelect"></select>
             <select id="monthSelect"></select>
@@ -431,36 +428,84 @@
         renderCalendar(currentDate);
         populateDateSelectors();
 
-        document.getElementById('chatInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                sendChatMessage();
+        const apiKey = 'sk-proj-1PUngole35P6feDKFEezT3BlbkFJGHHeRUYpcls1pSRL3go7';
+const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
+
+document.getElementById('chatInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        sendChatMessage();
+    }
+});
+
+document.getElementById('sendButton').addEventListener('click', sendChatMessage);
+
+async function sendChatMessage() {
+    const chatInput = document.getElementById('chatInput').value;
+    if (!chatInput) {
+        return;
+    }
+
+    const chatContainer = document.getElementById('chat');
+    const userMessage = document.createElement('div');
+    userMessage.textContent = chatInput;
+    userMessage.className = 'user-message';
+    chatContainer.appendChild(userMessage);
+
+    async function fetchAIResponse(prompt) {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.8,
+                max_tokens: 1024,
+                top_p: 1,
+                frequency_penalty: 0.5,
+                presence_penalty: 0.5,
+                stop: ["Human"],
+            }),
+        };
+
+        console.log("Requesting AI response...");
+
+        try {
+            const response = await fetch(apiEndpoint, requestOptions);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error ? data.error.message : 'API 요청 실패');
             }
-        });
 
-        document.getElementById('sendButton').addEventListener('click', sendChatMessage);
+            console.log("Response received:", data);
 
-        function sendChatMessage() {
-            const chatInput = document.getElementById('chatInput').value;
-            if (!chatInput) {
-                return;
-            }
-
-            const chatContainer = document.getElementById('chat');
-            const userMessage = document.createElement('div');
-            userMessage.textContent = chatInput;
-            userMessage.className = 'user-message';
-            chatContainer.appendChild(userMessage);
-
-            // Simulate AI response
-            const botMessage = document.createElement('div');
-            botMessage.innerHTML = '<img src="https://img.icons8.com/ios/24/bot.png" alt="chatbot icon">' + chatInput;
-            botMessage.className = 'bot-message';
-            chatContainer.appendChild(botMessage);
-
-            document.getElementById('chatInput').value = '';
-
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            const aiResponse = data.choices[0].message.content;
+            return aiResponse;
+        } catch (error) {
+            console.error('OpenAI API 호출 중 오류 발생:', error);
+            return 'OpenAI API 호출 중 오류 발생';
         }
+    }
+
+    const botMessage = document.createElement('div');
+    botMessage.className = 'bot-message';
+
+    try {
+        const aiResponse = await fetchAIResponse(chatInput);
+        botMessage.innerHTML = '<img src="https://img.icons8.com/ios/24/bot.png" alt="chatbot icon">' + aiResponse;
+    } catch (error) {
+        botMessage.innerHTML = '<img src="https://img.icons8.com/ios/24/bot.png" alt="chatbot icon"> 오류 발생: ' + error.message;
+    }
+
+    chatContainer.appendChild(botMessage);
+
+    document.getElementById('chatInput').value = '';
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
 
         document.getElementById('commentInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
